@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import {
   AfterLoad,
   BeforeInsert,
@@ -16,6 +16,7 @@ import Comment from "./Comment";
 import Entity from "./Entity";
 import Sub from "./Sub";
 import User from "./User";
+import Vote from "./Vote";
 
 @TypeOrmEntity("posts")
 export default class Post extends Entity {
@@ -50,6 +51,13 @@ export default class Post extends Entity {
   @Expose() get url(): string {
     return `/r/${this.subName}/${this.identifier}/${this.slug}`;
   }
+  @Expose() get commentCount(): number {
+    return this.comments?.length;
+  }
+
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
+  }
 
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
@@ -59,14 +67,18 @@ export default class Post extends Entity {
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
 
+  @Exclude()
+  @OneToMany(() => Vote, (vote) => vote.post)
+  votes: Vote[];
+
   @BeforeInsert()
   makeIdAndSlug() {
     this.identifier = generateId(7);
     this.slug = generateSlug(this.title, "_");
   }
-  // protected url: string;
-  // @AfterLoad()
-  // createFields() {
-  //   this.url = `/r/${this.subName}/${this.identifier}/${this.slug}`;
-  // }
+  protected userVote: number;
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex((v) => v.username === user.username);
+    this.userVote = index > 1 ? this.votes[index].value : 0;
+  }
 }
