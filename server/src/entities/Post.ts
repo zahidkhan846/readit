@@ -1,4 +1,6 @@
+import { Expose } from "class-transformer";
 import {
+  AfterLoad,
   BeforeInsert,
   Column,
   Entity as TypeOrmEntity,
@@ -42,6 +44,13 @@ export default class Post extends Entity {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
+  @Column()
+  username: string;
+
+  @Expose() get url(): string {
+    return `/r/${this.subName}/${this.identifier}/${this.slug}`;
+  }
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
@@ -55,4 +64,9 @@ export default class Post extends Entity {
     this.identifier = generateId(7);
     this.slug = generateSlug(this.title, "_");
   }
+  // protected url: string;
+  // @AfterLoad()
+  // createFields() {
+  //   this.url = `/r/${this.subName}/${this.identifier}/${this.slug}`;
+  // }
 }

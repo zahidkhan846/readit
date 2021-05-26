@@ -41,7 +41,7 @@ function Register() {
         setErrors({ ...errors, confirmPassword: "Password did not match!" });
         return;
       }
-      await axiosConnect.post("/api/auth/register", {
+      await axiosConnect.post("/auth/register", {
         email,
         password,
         username,

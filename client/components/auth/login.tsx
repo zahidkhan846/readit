@@ -19,7 +19,7 @@ function Login() {
     setLoading(true);
 
     try {
-      await axiosConnect.post("/api/auth/login", {
+      await axiosConnect.post("/auth/login", {
         username,
         password,
       });

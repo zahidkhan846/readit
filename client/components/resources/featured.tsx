@@ -5,7 +5,7 @@ const Featured: FC = () => {
   return (
     <div>
       <h1 className="mb-2 text-sm font-bold">Trending today</h1>
-      <div className="grid grid-cols-4">
+      <div className="grid items-center justify-between w-full grid-cols-4 gap-6">
         <div className="relative w-56 h-40">
           <Image
             src="/images/card.png"
