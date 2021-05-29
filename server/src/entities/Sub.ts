@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import {
   Column,
   Entity as TypeOrmEntity,
@@ -17,6 +18,9 @@ export default class Sub extends Entity {
     super();
     Object.assign(this, sub);
   }
+
+  @Column()
+  username: string;
 
   @Column({ unique: true })
   name: string;
@@ -39,4 +43,16 @@ export default class Sub extends Entity {
 
   @OneToMany(() => Post, (post) => post.sub)
   posts: Post[];
+
+  @Expose()
+  get imageUrl(): string {
+    return this.imageUrn
+      ? `${process.env.APP}/${this.imageUrn}`
+      : "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y";
+  }
+
+  @Expose()
+  get bannerUrl(): string {
+    return this.bannerUrn ? `${process.env.APP}/${this.bannerUrn}` : "";
+  }
 }

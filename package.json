@@ -17,5 +17,6 @@
     "node"
   ],
   "author": "zahid",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }

@@ -16,7 +16,7 @@ const Header = () => {
       </div>
       <Search />
       <div className="ml-auto">
-        <HeaderButtons user={false} />
+        <HeaderButtons />
       </div>
     </header>
   );

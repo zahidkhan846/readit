@@ -1,21 +1,50 @@
 import moment from "moment";
 import Link from "next/link";
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
+import { axiosConnect } from "../../config/axios";
+import { Post } from "../../utils/typeDefs";
+import classNames from "classnames";
 
-const PostItem = ({ post }) => {
-  const { username, body, createdAt, identifier, subName, url, title } = post;
+interface SinglePost {
+  post: Post;
+}
+
+const PostItem = ({ post }: SinglePost) => {
+  const {
+    username,
+    body,
+    createdAt,
+    identifier,
+    subName,
+    url,
+    title,
+    voteScore,
+    commentCount,
+    slug,
+    userVote,
+  } = post;
 
   const iconLink =
     "px-4 py-1 text-xs text-gray-500 hover:bg-gray-100 font-bold";
 
-  const [count, setCount] = useState(0);
+  const vote = async (value) => {
+    try {
+      const res = await axiosConnect.post("/misc/create-vote", {
+        identifier,
+        slug,
+        value,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleInc = () => {
-    setCount((prevCount) => prevCount + 1);
+    vote(1);
   };
 
   const handleDec = () => {
-    setCount((prevCount) => prevCount - 1);
+    vote(-1);
   };
 
   return (
@@ -25,14 +54,24 @@ const PostItem = ({ post }) => {
           className="text-sm font-bold text-gray-500 focus:outline-none"
           onClick={handleInc}
         >
-          <i className="font-extrabold fas fa-arrow-up hover:text-black"></i>
+          <i
+            className={classNames("icon-arrow-up hover:text-black", {
+              "text-green-500": userVote === 1,
+            })}
+          ></i>
         </button>
-        <span className="text-xs font-bold">{count ? count : "Vote"}</span>
+        <span className="text-xs font-bold">
+          {voteScore ? voteScore : "Vote"}
+        </span>
         <button
           className="text-sm font-bold text-gray-500 focus:outline-none hover:text-black"
           onClick={handleDec}
         >
-          <i className="font-extrabold fas fa-arrow-down"></i>
+          <i
+            className={classNames("icon-arrow-down hover:text-black", {
+              "text-red-500": userVote === -1,
+            })}
+          ></i>
         </button>
       </div>
       <div className="w-full pt-2 pl-2 pr-2">
@@ -70,7 +109,8 @@ const PostItem = ({ post }) => {
         <div className="flex items-center justify-start gap-1 mt-4">
           <Link href="/">
             <a className={iconLink}>
-              <i className="fas fa-comment-alt"></i> Comments
+              <i className="fas fa-comment-alt"></i> {commentCount}{" "}
+              {commentCount <= 1 ? "Comment" : "Comments"}
             </a>
           </Link>
 

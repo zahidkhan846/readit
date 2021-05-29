@@ -4,25 +4,31 @@ import { useRouter } from "next/router";
 import { axiosConnect } from "../../config/axios";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import { useAuth } from "../../context/auth";
 
 function Login() {
+  const { login, authenticated } = useAuth();
+
+  const router = useRouter();
+  if (authenticated) router.push("/");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
-  const router = useRouter();
-
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await axiosConnect.post("/auth/login", {
+      const res = await axiosConnect.post("/auth/login", {
         username,
         password,
       });
+
+      login(res.data);
       router.push("/");
     } catch (error) {
       setErrors(error.response.data);

@@ -4,8 +4,14 @@ import { useRouter } from "next/router";
 import { axiosConnect } from "../../config/axios";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import { useAuth } from "../../context/auth";
 
 function Register() {
+  const { authenticated } = useAuth();
+  const router = useRouter();
+
+  if (authenticated) router.push("/");
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,8 +21,6 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
-
-  const router = useRouter();
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();

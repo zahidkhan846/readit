@@ -1,31 +1,25 @@
-import React, { FC, useEffect, useState } from "react";
-import { axiosConnect } from "../../config/axios";
-import { Post } from "../../utils/typeDefs";
+import React, { FC } from "react";
+import useSWR from "swr";
+
 import PostItem from "./post";
 
 const Home: FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const { data: posts, error } = useSWR("/post/get-posts");
 
-  const fetchPosts = async () => {
-    try {
-      const res = await axiosConnect.get("/post/get-posts");
+  if (!posts) {
+    return (
+      <p className="flex items-center justify-center h-full text-3xl font-bold text-gray-500">
+        Loading...
+      </p>
+    );
+  }
 
-      if (res.status === 200) {
-        setPosts(res.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  console.log(posts);
+  if (error) {
+    console.log(error);
+  }
 
   return (
-    <div className="flex gap-4 mt-4 place-items-center">
+    <div className="container flex gap-4 mt-4 place-items-center">
       <div className="flex-1">
         {posts.map((post) => (
           <PostItem key={post.identifier} post={post} />

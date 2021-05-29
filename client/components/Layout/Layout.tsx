@@ -12,7 +12,7 @@ function Layout(props) {
   return (
     <Fragment>
       {!authRoute && <Header />}
-      <main className="container py-4 mt-12">{props.children}</main>
+      <main>{props.children}</main>
     </Fragment>
   );
 }

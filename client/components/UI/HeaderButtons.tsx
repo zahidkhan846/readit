@@ -1,31 +1,53 @@
+import classNames from "classnames";
 import Link from "next/link";
-import React, { FC } from "react";
+import React, { FC, Fragment } from "react";
+import { axiosConnect } from "../../config/axios";
+import { useAuth } from "../../context/auth";
 
-interface HeaderButtonType {
-  user?: boolean;
-}
+const HeaderButtons: FC = () => {
+  const { authenticated, logout } = useAuth();
 
-const HeaderButtons: FC<HeaderButtonType> = ({ user }) => {
+  const handleLogout = async () => {
+    try {
+      await axiosConnect.get("/auth/logout");
+      logout();
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <nav className="flex justify-center gap-4 item-center">
-      <Link href="/auth/login">
-        <a className="px-8 py-1 text-sm font-bold text-blue-500 bg-white border border-blue-500 rounded-full hover:bg-blue-100">
-          Log In
-        </a>
-      </Link>
-      <Link href="/auth/register">
-        <a className="px-8 py-1 text-sm font-bold text-white bg-blue-500 border border-blue-500 rounded-full hover:bg-blue-400">
-          Sign Up
-        </a>
-      </Link>
-      <Link href="/">
-        <a className="px-6 py-1 bg-white border rounded hover:border-gray-300 hover:bg-gray-200">
-          <i
-            className={`fa fa-user ${user ? "text-black" : "text-gray-300"}`}
-            aria-hidden="true"
-          ></i>
-        </a>
-      </Link>
+      {!authenticated && (
+        <Fragment>
+          <Link href="/auth/login">
+            <a className="px-8 py-1 text-sm font-bold text-blue-500 bg-white border border-blue-500 rounded-full hover:bg-blue-100">
+              Log In
+            </a>
+          </Link>
+          <Link href="/auth/register">
+            <a className="px-8 py-1 text-sm font-bold text-white bg-blue-500 border border-blue-500 rounded-full hover:bg-blue-400">
+              Sign Up
+            </a>
+          </Link>
+        </Fragment>
+      )}
+
+      <button
+        disabled={!authenticated}
+        className={classNames(
+          "py-1 px-8 border border-gray-200 rounded text-gray-200",
+          {
+            "cursor-default": !authenticated,
+            "cursor-pointer border-green-400 rounded text-green-400 hover:border-red-400 hover:text-red-400":
+              authenticated,
+          }
+        )}
+        onClick={handleLogout}
+      >
+        <i className="fa fa-user" aria-hidden="true"></i>
+      </button>
     </nav>
   );
 };

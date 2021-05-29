@@ -42,6 +42,7 @@ export default class Post extends Entity {
   @Column()
   subName: string;
 
+  @Exclude()
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
@@ -76,9 +77,10 @@ export default class Post extends Entity {
     this.identifier = generateId(7);
     this.slug = generateSlug(this.title, "_");
   }
+
   protected userVote: number;
   setUserVote(user: User) {
     const index = this.votes?.findIndex((v) => v.username === user.username);
-    this.userVote = index > 1 ? this.votes[index].value : 0;
+    this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 }

@@ -6,7 +6,7 @@ function Dashboard(props) {
   return (
     <div>
       <Featured />
-      <Home posts={props.posts} />
+      <Home />
     </div>
   );
 }

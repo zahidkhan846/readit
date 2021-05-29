@@ -27,7 +27,15 @@ export const createPost = async (req: Request, res: Response) => {
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find({ order: { createdAt: "DESC" } });
+    const posts = await Post.find({
+      order: { createdAt: "DESC" },
+      relations: ["comments", "sub", "votes"],
+    });
+
+    if (res.locals.user) {
+      posts.forEach((p) => p.setUserVote(res.locals.user));
+    }
+
     if (!posts) {
       throw new Error("Posts not found!");
     }

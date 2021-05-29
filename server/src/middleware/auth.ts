@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import User from "../entities/User";
 
 export const checkAuthStatus = async (
@@ -8,18 +7,8 @@ export const checkAuthStatus = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      throw new Error("Unauthenticated!");
-    }
-
-    const { username }: any = jwt.verify(token, process.env.JWT_SECRET);
-    const currentUser = await User.findOne({ username });
-
+    const currentUser: User | undefined = res.locals.user;
     if (!currentUser) throw new Error("Unauthenticated!");
-
-    res.locals.user = currentUser;
 
     return next();
   } catch (error) {
