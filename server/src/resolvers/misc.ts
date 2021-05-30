@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import { getConnection } from "typeorm";
 import Comment from "../entities/Comment";
 import Post from "../entities/Post";
+import Sub from "../entities/Sub";
 import User from "../entities/User";
 import Vote from "../entities/Vote";
 
@@ -56,3 +58,37 @@ export const createVote = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 };
+
+export const latestSubs = async (req: Request, res: Response) => {
+  try {
+    const subs = await (
+      await Sub.find({ order: { createdAt: "DESC" } })
+    ).slice(0, 5);
+
+    return res.json(subs);
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+// const topSubcripes = async (req: Request, res: Response) => {}(_: Request, res: Response) => {
+//   try {
+
+//     const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`
+//     const subs = await getConnection()
+//       .createQueryBuilder()
+//       .select(
+//         `s.title, s.name, ${imageUrlExp} as "imageUrl", count(p.id) as "postCount"`
+//       )
+//       .from(Sub, 's')
+//       .leftJoin(Post, 'p', `s.name = p."subName"`)
+//       .groupBy('s.title, s.name, "imageUrl"')
+//       .orderBy(`"postCount"`, 'DESC')
+//       .limit(5)
+//       .execute()
+
+//     return res.json(subs)
+//   } catch (err) {
+//     return res.status(500).json({ error: 'Something went wrong' })
+//   }
+// }

@@ -10,7 +10,6 @@ function Login() {
   const { login, authenticated } = useAuth();
 
   const router = useRouter();
-  if (authenticated) router.push("/");
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +36,9 @@ function Login() {
     setLoading(false);
   };
 
+  if (authenticated) {
+    router.push("/");
+  }
   return (
     <div className="flex bg-white">
       <div

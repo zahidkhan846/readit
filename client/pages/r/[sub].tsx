@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { ChangeEvent, Fragment, useRef } from "react";
 import useSWR from "swr";
 import PostItem from "../../components/resources/post";
+import Sidebar from "../../components/resources/sidebar";
 import { axiosConnect } from "../../config/axios";
 import { useAuth } from "../../context/auth";
 import { Sub } from "../../utils/typeDefs";
@@ -121,7 +122,9 @@ function SubPage() {
                 <PostItem key={post.identifier} post={post} />
               ))}
             </div>
-            <div className="w-72"></div>
+            <div className="w-72">
+              <Sidebar sub={sub} />
+            </div>
           </div>
         </div>
       </div>
