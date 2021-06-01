@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, Fragment, useRef } from "react";
 import useSWR from "swr";
-import PostItem from "../../components/resources/post";
-import Sidebar from "../../components/resources/sidebar";
-import { axiosConnect } from "../../config/axios";
-import { useAuth } from "../../context/auth";
-import { Sub } from "../../utils/typeDefs";
+import PostItem from "../../../components/resources/post";
+import Sidebar from "../../../components/resources/sidebar";
+import { axiosConnect } from "../../../config/axios";
+import { useAuth } from "../../../context/auth";
+import { Sub } from "../../../utils/typeDefs";
 
 function SubPage() {
   const router = useRouter();

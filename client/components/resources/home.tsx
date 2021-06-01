@@ -9,7 +9,7 @@ const Home: FC = () => {
   const { data: posts, error } = useSWR("/post/get-posts");
   const { data: subs, error: subError } = useSWR("/misc/latest-subs");
 
-  if (!posts) {
+  if (!posts || !subs) {
     return (
       <p className="flex items-center justify-center h-full text-3xl font-bold text-gray-500">
         Loading...
@@ -17,11 +17,9 @@ const Home: FC = () => {
     );
   }
 
-  if (error) {
-    console.log(error);
+  if (error || subError) {
+    console.log(error, subError);
   }
-
-  console.log(subs);
 
   return (
     <div className="container flex gap-4 mt-4">

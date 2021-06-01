@@ -11,6 +11,7 @@ export interface Post {
   voteScore?: number;
   commentCount?: number;
   userVote?: number;
+  sub?: Sub;
 }
 
 export interface User {
@@ -32,4 +33,14 @@ export interface Sub {
   imageUrl: string;
   bannerUrl: string;
   posts?: Post[];
+}
+
+export interface Comment {
+  body: string;
+  createdAt: string;
+  identifier: string;
+  updatedAt: string;
+  userVote: number;
+  username: string;
+  voteScore: number;
 }

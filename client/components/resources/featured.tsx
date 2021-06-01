@@ -14,8 +14,6 @@ const Featured: FC = () => {
     console.log(error);
   }
 
-  console.log(posts);
-
   return (
     <div className="container pt-4 mt-12">
       <h1 className="mb-2 text-sm font-bold">Latest Posts</h1>

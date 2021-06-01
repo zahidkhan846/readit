@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Comment from "../entities/Comment";
 import Post from "../entities/Post";
 import Sub from "../entities/Sub";
 
@@ -49,13 +50,15 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
 export const getSinglePost = async (req: Request, res: Response) => {
   const { identifier, slug } = req.params;
+
   try {
-    const post = await Post.findOne(
-      { identifier, slug },
-      { relations: ["sub", "comments"] }
+    const post = await Post.findOneOrFail(
+      { identifier: identifier, slug: slug },
+      { relations: ["comments", "votes", "sub"] }
     );
-    if (!post) {
-      throw new Error("Post not found!");
+
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
     }
 
     return res.json(post);
@@ -74,5 +77,48 @@ export const latestPosts = async (req: Request, res: Response) => {
     return res.json(subs);
   } catch (error) {
     return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const getPostComment = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
+
+  try {
+    const post = await Post.findOneOrFail({
+      identifier: identifier,
+      slug: slug,
+    });
+
+    const comments = await Comment.find({
+      where: { post },
+      order: { createdAt: "DESC" },
+      relations: ["votes"],
+    });
+
+    if (res.locals.user) {
+      comments.forEach((comment) => comment.setUserVote(res.locals.user));
+    }
+
+    return res.json(comments);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const postComment = async (req: Request, res: Response) => {
+  const { body } = req.body;
+  const { identifier, slug } = req.params;
+
+  try {
+    const post = await Post.findOneOrFail({ identifier, slug });
+
+    const newComent = await new Comment({ body, user: res.locals.user, post });
+
+    await newComent.save();
+
+    return res.json(newComent);
+  } catch (error) {
+    return res.status(404).json({ error: "Post not found" });
   }
 };

@@ -12,12 +12,12 @@ function Sidebar({ sub }) {
     if (!authenticated) {
       return;
     }
-    router.push(`r/${sub.name}/create-post`);
+    router.push(`/r/${sub.name}/create-post`);
   };
 
   return (
     <div
-      style={{ minHeight: "350px" }}
+      style={{ minHeight: "300px" }}
       className="w-full overflow-hidden bg-white rounded"
     >
       <div className="flex items-center h-16 bg-blue-500">
@@ -36,7 +36,7 @@ function Sidebar({ sub }) {
           </div>
         </div>
       </div>
-      <div className="px-2 mt-4">
+      <div className="px-4 mt-4">
         <div className="flex items-center h-full gap-2">
           <p>
             <i className="fa fa-birthday-cake" aria-hidden="true"></i>
@@ -50,14 +50,16 @@ function Sidebar({ sub }) {
           <p>{`r/${sub.name} topics`}</p>
         </div>
       </div>
-      <div className="flex items-center justify-center w-full h-full mt-4">
-        <button
-          onClick={handleCreatePost}
-          className="px-8 py-2 text-sm text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none"
-        >
-          Create New Post
-        </button>
-      </div>
+      {authenticated && (
+        <div className="flex items-center justify-center w-full h-full my-4">
+          <button
+            onClick={handleCreatePost}
+            className="px-8 py-2 text-sm text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:outline-none"
+          >
+            Create New Post
+          </button>
+        </div>
+      )}
     </div>
   );
 }

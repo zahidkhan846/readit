@@ -30,6 +30,13 @@ module.exports = {
           "@screen md": { maxWidth: "768px" },
           "@screen lg": { maxWidth: "975px" },
         },
+        ".container-2": {
+          width: "100%",
+          margin: "0 auto",
+          "@screen sm": { maxWidth: "700px" },
+          "@screen md": { maxWidth: "900px" },
+          "@screen lg": { maxWidth: "1300px" },
+        },
       });
     },
   ],
