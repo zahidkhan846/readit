@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
-import useSWR from "swr";
+import React, { FC, useEffect, useState } from "react";
+import useSWR, { useSWRInfinite } from "swr";
 import { useAuth } from "../../context/auth";
 import { Post, Sub } from "../../utils/typeDefs";
 
@@ -13,8 +13,50 @@ const Home: FC = () => {
   const router = useRouter();
   const { authenticated } = useAuth();
 
-  const { data: posts, error } = useSWR<Post[]>("/post/get-posts");
+  // const { data: posts, error, revalidate } = useSWR<Post[]>("/post/get-posts");
   const { data: subs, error: subError } = useSWR<Sub[]>("/misc/latest-subs");
+
+  const [observedPosts, setObservedPosts] = useState("");
+
+  const {
+    data,
+    error,
+    mutate,
+    size: page,
+    setSize: setPage,
+    isValidating,
+    revalidate,
+  } = useSWRInfinite<Post[]>(
+    (index) => `/post/get-posts?page=${index}&count=4`
+  );
+
+  const posts: Post[] = data ? [].concat(...data) : [];
+
+  useEffect(() => {
+    if (!posts || posts.length === 0) return;
+    const id = posts[posts.length - 1].identifier;
+
+    if (id !== observedPosts) {
+      setObservedPosts(id);
+      observedElement(document.getElementById(id));
+    }
+  }, [posts]);
+
+  const observedElement = (element: HTMLElement) => {
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting === true) {
+          console.log("Bottom met fetching more data!");
+          setPage(page + 1);
+          observer.unobserve(element);
+        }
+      },
+      { threshold: 1 }
+    );
+    observer.observe(element);
+  };
 
   if (!posts || !subs) {
     return (
@@ -31,9 +73,19 @@ const Home: FC = () => {
   return (
     <div className="container flex gap-4 mt-4">
       <div className="flex-1">
+        {isValidating && (
+          <p className="flex items-center justify-center h-full text-xl font-bold text-gray-500">
+            Loading...
+          </p>
+        )}
         {posts.map((post) => (
-          <PostItem key={post.identifier} post={post} />
+          <PostItem key={post.identifier} post={post} revalidate={revalidate} />
         ))}
+        {isValidating && posts.length > 0 && (
+          <p className="flex items-center justify-center h-full text-xl font-bold text-gray-500">
+            Loading More...
+          </p>
+        )}
       </div>
       <div className="h-full overflow-hidden rounded w-72">
         <div style={{ minHeight: "410px" }} className="bg-white">
@@ -46,6 +98,7 @@ const Home: FC = () => {
             {subs?.map((sub: Sub, index) => (
               <TrandingSub sub={sub} index={index} key={index} />
             ))}
+
             <div className="w-full px-4 mt-4">
               <button className="w-full py-2 text-xs font-bold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none">
                 VIEW ALL

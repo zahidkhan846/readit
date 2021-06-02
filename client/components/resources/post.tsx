@@ -10,9 +10,10 @@ import VoteButtons from "./VoteButtons";
 
 interface SinglePost {
   post: Post;
+  revalidate?: Function;
 }
 
-const PostItem = ({ post }: SinglePost) => {
+const PostItem = ({ post, revalidate }: SinglePost) => {
   const {
     username,
     body,
@@ -40,18 +41,19 @@ const PostItem = ({ post }: SinglePost) => {
       value = 0;
     }
     try {
-      const res = await axiosConnect.post("/misc/create-vote", {
+      await axiosConnect.post("/misc/create-vote", {
         identifier,
         slug,
         value,
       });
+      revalidate();
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="flex mb-4 bg-white rounded">
+    <div className="flex mb-4 bg-white rounded" id={identifier}>
       <div className="flex flex-col w-10 pt-4 text-center bg-gray-100 rounded-l place-items-center">
         <VoteButtons voteScore={voteScore} vote={vote} userVote={userVote} />
       </div>
