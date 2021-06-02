@@ -3,12 +3,13 @@ import { checkAuthStatus } from "../middleware/auth";
 import { fileUpload } from "../middleware/file";
 import { checkSubOwner } from "../middleware/sub";
 import { checkUserStatus } from "../middleware/user";
-import { createSub, getSub, uploadImage } from "../resolvers/sub";
+import { createSub, getSub, searchSub, uploadImage } from "../resolvers/sub";
 
 const router = Router();
 
 router.post("/create-sub", checkUserStatus, checkAuthStatus, createSub);
 router.get("/:name", checkUserStatus, getSub);
+router.get("/search/:name", searchSub);
 router.post(
   "/:name/image",
   checkUserStatus,

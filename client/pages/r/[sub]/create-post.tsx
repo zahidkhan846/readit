@@ -1,3 +1,4 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { FormEvent, useState, useEffect } from "react";
@@ -148,3 +149,15 @@ function CreatePost() {
 }
 
 export default CreatePost;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { req, res } = ctx;
+  try {
+    const cookie = req.headers.cookie;
+    if (!cookie) throw new Error("Missing auth token");
+    await axiosConnect.get("/auth/user/", { headers: { cookie } });
+    return { props: {} };
+  } catch (error) {
+    res.writeHead(307, { Location: "/auth/login" }).end();
+  }
+};

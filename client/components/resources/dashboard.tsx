@@ -2,7 +2,7 @@ import React from "react";
 import Featured from "./featured";
 import Home from "./home";
 
-function Dashboard(props) {
+function Dashboard() {
   return (
     <div>
       <Featured />

@@ -16,7 +16,7 @@ function Logo() {
           ></path>
         </g>
       </svg>
-      <span className="text-2xl font-semibold">
+      <span className="hidden text-2xl font-semibold lg:block">
         read<span className="text-red-600">i</span>t
       </span>
     </div>

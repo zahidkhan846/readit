@@ -6,16 +6,18 @@ import Search from "./Search";
 
 const Header = () => {
   return (
-    <header className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 gap-2 px-5 bg-white">
-      <div className="mr-auto">
+    <header className="fixed inset-x-0 top-0 z-10 flex items-center justify-between h-12 gap-4 px-5 bg-white">
+      <div>
         <Link href="/">
           <a>
             <Logo />
           </a>
         </Link>
       </div>
-      <Search />
-      <div className="ml-auto">
+      <div className="flex-1" style={{ maxWidth: "600px" }}>
+        <Search />
+      </div>
+      <div>
         <HeaderButtons />
       </div>
     </header>

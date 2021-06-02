@@ -22,12 +22,12 @@ const HeaderButtons: FC = () => {
       {!authenticated && (
         <Fragment>
           <Link href="/auth/login">
-            <a className="px-8 py-1 text-sm font-bold text-blue-500 bg-white border border-blue-500 rounded-full hover:bg-blue-100">
+            <a className="hidden px-8 py-1 text-sm font-bold text-blue-500 bg-white border border-blue-500 rounded-full sm:block hover:bg-blue-100">
               Log In
             </a>
           </Link>
           <Link href="/auth/register">
-            <a className="px-8 py-1 text-sm font-bold text-white bg-blue-500 border border-blue-500 rounded-full hover:bg-blue-400">
+            <a className="hidden px-8 py-1 text-sm font-bold text-white bg-blue-500 border border-blue-500 rounded-full sm:block hover:bg-blue-400">
               Sign Up
             </a>
           </Link>

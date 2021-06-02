@@ -99,3 +99,22 @@ export const getSub = async (req: Request, res: Response) => {
     res.status(404).json({ error: "Something went wrong" });
   }
 };
+
+export const searchSub = async (req: Request, res: Response) => {
+  const { name } = req.params;
+  try {
+    if (isEmpty(name)) {
+      return res.status(400).json({ error: "Name is empty" });
+    }
+    const subs = await getRepository(Sub)
+      .createQueryBuilder()
+      .where("LOWER(name) LIKE :name", {
+        name: `${name.toLowerCase().trim()}%`,
+      })
+      .getMany();
+    return res.json(subs);
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ error: "Something went wrong" });
+  }
+};

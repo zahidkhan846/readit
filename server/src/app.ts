@@ -13,6 +13,7 @@ import authRoutes from "./routes/auth";
 import postRoutes from "./routes/post";
 import subRoutes from "./routes/sub";
 import miscRoutes from "./routes/misc";
+import userRoutes from "./routes/user";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/sub", subRoutes);
 app.use("/api/misc", miscRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(process.env.PORT, async () => {
   console.log("Server running on:" + process.env.PORT);

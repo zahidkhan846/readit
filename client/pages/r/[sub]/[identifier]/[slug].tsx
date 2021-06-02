@@ -138,6 +138,7 @@ function SinglePost() {
                           postSub={postSub}
                           url={url}
                           createdAt={createdAt}
+                          username={username}
                         />
                       </header>
                       <div>

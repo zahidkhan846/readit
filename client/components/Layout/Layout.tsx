@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import Header from "../UI/Header";
 import { useRouter } from "next/router";
+import { useSearch } from "../../context/search";
 
 function Layout(props) {
   const { pathname } = useRouter();
@@ -9,11 +10,17 @@ function Layout(props) {
 
   const authRoute = authRoutes.includes(pathname);
 
+  const { setSubs } = useSearch();
+
+  const handleCloseSearch = () => {
+    setSubs([]);
+  };
+
   return (
-    <Fragment>
+    <div onClick={handleCloseSearch}>
       {!authRoute && <Header />}
       <main>{props.children}</main>
-    </Fragment>
+    </div>
   );
 }
 

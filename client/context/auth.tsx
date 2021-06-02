@@ -101,6 +101,7 @@ function AuthProvider({ children }: Children) {
     user: state.user,
     authenticated: state.authenticated,
   };
+
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
