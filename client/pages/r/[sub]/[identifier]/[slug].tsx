@@ -77,6 +77,7 @@ function SinglePost() {
     <Fragment>
       <Head>
         <title>{post.title}</title>
+        <meta name="description" content={post.title} />
       </Head>
       <section className="mt-12 bg-blue-500">
         <div className="min-h-screen bg-gray-200 container-2">

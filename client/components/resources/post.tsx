@@ -26,6 +26,7 @@ const PostItem = ({ post, revalidate }: SinglePost) => {
     commentCount,
     slug,
     userVote,
+    sub,
   } = post;
 
   const { authenticated } = useAuth();
@@ -52,6 +53,8 @@ const PostItem = ({ post, revalidate }: SinglePost) => {
     }
   };
 
+  const isPathSub = router.pathname === "r/[sub]";
+
   return (
     <div className="flex mb-4 bg-white rounded" id={identifier}>
       <div className="flex flex-col w-10 pt-4 text-center bg-gray-100 rounded-l place-items-center">
@@ -59,19 +62,24 @@ const PostItem = ({ post, revalidate }: SinglePost) => {
       </div>
       <div className="w-full pt-2 pl-2 pr-2">
         <div className="flex items-center">
-          <Fragment>
-            <Link href={`/r/${subName}`}>
-              <img
-                className="w-6 h-6 mr-1 rounded-full"
-                src="https://picsum.photos/50"
-              />
-            </Link>
-            <Link href={`/r/${subName}`}>
-              <a className="text-xs font-bold hover:underline">{`/r/${subName}`}</a>
-            </Link>
-          </Fragment>
-          <p className="ml-1 text-xs text-gray-500">
-            . Posted by{" "}
+          {!isPathSub && sub && (
+            <Fragment>
+              <Link href={`/r/${subName}`}>
+                <img
+                  className="w-6 h-6 mr-1 rounded-full"
+                  src={sub?.imageUrl}
+                />
+              </Link>
+              <Link href={`/r/${subName}`}>
+                <a className="mr-1 text-xs font-bold hover:underline">
+                  {`/r/${subName}`}{" "}
+                  <span className="text-xs text-gray-500">.</span>
+                </a>
+              </Link>
+            </Fragment>
+          )}
+          <p className="text-xs text-gray-500">
+            Posted by{" "}
             <Link href={`/u/${username}`}>
               <a className="hover:underline">{`/u/${username}`}</a>
             </Link>

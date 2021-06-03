@@ -31,6 +31,7 @@ const Home: FC = () => {
   );
 
   const posts: Post[] = data ? [].concat(...data) : [];
+  const isLoadingInitialData = !data && !error;
 
   useEffect(() => {
     if (!posts || posts.length === 0) return;
@@ -58,7 +59,7 @@ const Home: FC = () => {
     observer.observe(element);
   };
 
-  if (!posts || !subs) {
+  if (isLoadingInitialData || !subs) {
     return (
       <p className="flex items-center justify-center h-full text-3xl font-bold text-gray-500">
         Loading...
@@ -73,19 +74,9 @@ const Home: FC = () => {
   return (
     <div className="container flex gap-4 mt-4">
       <div className="flex-1">
-        {isValidating && (
-          <p className="flex items-center justify-center h-full text-xl font-bold text-gray-500">
-            Loading...
-          </p>
-        )}
         {posts.map((post) => (
           <PostItem key={post.identifier} post={post} revalidate={revalidate} />
         ))}
-        {isValidating && posts.length > 0 && (
-          <p className="flex items-center justify-center h-full text-xl font-bold text-gray-500">
-            Loading More...
-          </p>
-        )}
       </div>
       <div className="h-full overflow-hidden rounded w-72">
         <div style={{ minHeight: "410px" }} className="bg-white">

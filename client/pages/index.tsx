@@ -7,6 +7,10 @@ function HomePage() {
     <Fragment>
       <Head>
         <title>Home Page</title>
+        <meta
+          name="description"
+          content="This is somewhat clone of reddit.com"
+        />
       </Head>
       <Dashboard />
     </Fragment>

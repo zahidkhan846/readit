@@ -25,6 +25,12 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
           />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <title>Readit</title>
+          <meta
+            name="description"
+            content="This is somewhat clone of www.reddit.com"
+          />
         </Head>
         <Head />
         <body className="bg-gray-200 font-body">
