@@ -1,18 +1,55 @@
+import classNames from "classnames";
 import moment from "moment";
 import Image from "next/image";
-import React from "react";
+import React, { ChangeEvent, FormEvent, useRef } from "react";
+import { axiosConnect } from "../../config/axios";
+import { useAuth } from "../../context/auth";
 
-function UserCard({ user }) {
+function UserCard({ user, revalidate }) {
+  const { authenticated, user: loggedInUser } = useAuth();
+
+  const imageRef = useRef<HTMLInputElement>();
+
+  const isValidUser = loggedInUser?.username === user.username;
+
+  const handleFileSelect = () => {
+    if (!authenticated || !isValidUser) return;
+    imageRef.current.click();
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!authenticated || !isValidUser) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("userImage", file);
+    try {
+      await axiosConnect.post(`/user/${user.username}/image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      revalidate();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="overflow-hidden bg-white rounded w-80">
       <div className="h-20 bg-blue-500"></div>
+      <input
+        ref={imageRef}
+        type="file"
+        hidden={true}
+        onChange={handleImageUpload}
+      />
       <div
         className="flex items-center justify-center overflow-hidden"
         style={{ marginTop: "-50px" }}
       >
         <Image
-          className="rounded"
-          src="https://picsum.photos/50"
+          onClick={handleFileSelect}
+          className={classNames("rounded", { "cursor-pointer": isValidUser })}
+          src={user.imageUrl}
           height={100}
           width={100}
         />

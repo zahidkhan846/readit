@@ -6,11 +6,10 @@ import {
   OneToMany,
 } from "typeorm";
 import bcrypt from "bcrypt";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 
 import Entity from "./Entity";
 import Post from "./Post";
-import post from "../routes/post";
 import Vote from "./Vote";
 
 @TypeOrmEntity("users")
@@ -31,6 +30,9 @@ export default class User extends Entity {
   @Length(1, 255, { message: "Email is Empty" })
   email: string;
 
+  @Column({ nullable: true })
+  imageUrn: string;
+
   @Exclude()
   @Column()
   @Length(3, 255, {
@@ -47,5 +49,12 @@ export default class User extends Entity {
   @BeforeInsert()
   async hashPasword() {
     this.password = await bcrypt.hash(this.password, 6);
+  }
+
+  @Expose()
+  get imageUrl(): string {
+    return this.imageUrn
+      ? `${process.env.APP}/user/${this.imageUrn}`
+      : process.env.AVATAR;
   }
 }

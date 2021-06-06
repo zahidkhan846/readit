@@ -11,7 +11,9 @@ function UserData() {
 
   const { username } = router.query;
 
-  const { data, error } = useSWR<any>(username ? `/user/${username}` : null);
+  const { data, error, revalidate } = useSWR<any>(
+    username ? `/user/${username}` : null
+  );
 
   if (!data) {
     return <p>Loading...</p>;
@@ -38,7 +40,7 @@ function UserData() {
           })}
         </div>
         <div>
-          <UserCard user={data.user} />
+          <UserCard user={data.user} revalidate={revalidate} />
         </div>
       </div>
     </div>

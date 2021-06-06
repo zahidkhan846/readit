@@ -50,6 +50,9 @@ function SubPage() {
   };
 
   const uploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!subOwner) {
+      return;
+    }
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);

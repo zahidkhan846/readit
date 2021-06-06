@@ -75,6 +75,18 @@ export const uploadImage = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllSubs = async (req: Request, res: Response) => {
+  try {
+    const subs = await Sub.find({
+      order: { createdAt: "DESC" },
+    });
+    return res.json(subs);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 export const getSub = async (req: Request, res: Response) => {
   const { name } = req.params;
 

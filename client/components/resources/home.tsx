@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
 import useSWR, { useSWRInfinite } from "swr";
@@ -11,7 +10,7 @@ import TrandingSub from "./trandingSub";
 
 const Home: FC = () => {
   const router = useRouter();
-  const { authenticated } = useAuth();
+  const { authenticated, user } = useAuth();
 
   // const { data: posts, error, revalidate } = useSWR<Post[]>("/post/get-posts");
   const { data: subs, error: subError } = useSWR<Sub[]>("/misc/latest-subs");
@@ -108,7 +107,7 @@ const Home: FC = () => {
               className="flex items-center justify-center overflow-hidden rounded-md"
             >
               <Image
-                src="https://picsum.photos/80"
+                src={user?.imageUrl || "https://picsum.photos/80"}
                 className="rounded-md"
                 width={50}
                 height={50}

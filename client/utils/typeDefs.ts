@@ -19,6 +19,7 @@ export interface User {
   username: string;
   createdAt: string;
   updatedAt: string;
+  imageUrl?: string;
 }
 
 export interface Sub {
